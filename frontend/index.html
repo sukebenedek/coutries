@@ -22,7 +22,7 @@
     let countriesData = [];
 
     // Fetch countries on load
-    fetch("countries-backend-sukebenedek.jcloud.jedlik.cloud/countries")
+    fetch("http://countries-backend-sukebenedek.jcloud.jedlik.cloud/countries")
       .then(res => res.json())
       .then(data => {
         countriesData = data;
