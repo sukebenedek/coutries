@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Countries & Cities</title>
+</head>
+<body>
+
+  <h2>Select a country</h2>
+
+  <select id="countrySelect">
+    <option value="">-- Choose a country --</option>
+  </select>
+
+  <h3>Cities:</h3>
+  <ul id="cityList"></ul>
+
+  <script>
+    const countrySelect = document.getElementById("countrySelect");
+    const cityList = document.getElementById("cityList");
+
+    let countriesData = [];
+
+    // Fetch countries on load
+    fetch("/countries")
+      .then(res => res.json())
+      .then(data => {
+        countriesData = data;
+
+        data.forEach(country => {
+          const option = document.createElement("option");
+          option.value = country.name;
+          option.textContent = country.name;
+          countrySelect.appendChild(option);
+        });
+      });
+
+    // When country is selected
+    countrySelect.addEventListener("change", () => {
+      const selected = countrySelect.value;
+      cityList.innerHTML = "";
+
+      const country = countriesData.find(c => c.name === selected);
+
+      if (country) {
+        country.cities.forEach(city => {
+          const li = document.createElement("li");
+          li.textContent = city;
+          cityList.appendChild(li);
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

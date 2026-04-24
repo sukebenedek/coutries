@@ -1,0 +1,106 @@
+# kubectl create secret docker-registry ghcr-auth-secret --docker-server=ghcr.io --docker-username=hunbenjamin --docker-password=$GHCR_TOKEN
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: countries-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: countries-backend
+  template:
+    metadata:
+      labels:
+        pod: countries-backend
+    spec:
+      containers:
+        - name: countries-backend-container
+          image: ghcr.io/sukebenedek/countries-backend:latest
+          ports:
+            - containerPort: 3000
+      imagePullSecrets:
+        - name: ghcr-auth-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: countries-backend-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    pod: countries-backend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: countries-backend-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: countries-backend-sukebenedek.jcloud.jedlik.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: countries-backend-clusterip
+                port:
+                  number: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: countries-frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: countries-frontend
+  template:
+    metadata:
+      labels:
+        pod: countries-frontend
+    spec:
+      containers:
+        - name: countries-frontend-container
+          image: ghcr.io/sukebenedek/countries-frontend:latest
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: ghcr-auth-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: countries-frontend-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    pod: countries-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: countries-frontend-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: countries-sukebenedek.jcloud.jedlik.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: countries-frontend-clusterip
+                port:
+                  number: 80
