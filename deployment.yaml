@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: countries-backend-container
-          image: ghcr.io/sukebenedek/countries-backend:latest
+          image: ghcr.io/sukebenedek/countries-backend:1777015084
           ports:
             - containerPort: 3000
       imagePullSecrets:
@@ -68,7 +68,7 @@ spec:
     spec:
       containers:
         - name: countries-frontend-container
-          image: ghcr.io/sukebenedek/countries-frontend:latest
+          image: ghcr.io/sukebenedek/countries-frontend:1777015084
           ports:
             - containerPort: 80
       imagePullSecrets:
