@@ -2,6 +2,9 @@ FROM node:25
 
 WORKDIR /app
 
-COPY ./server.js /app/server.js
+COPY package*.json ./
+RUN npm install
+
+COPY . .
 
 CMD ["node", "server.js"]
