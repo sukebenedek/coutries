@@ -16,6 +16,10 @@ const countries = [
   {
     name: "Slovakia",
     cities: ["Bratislava", "Košice", "Žilina"]
+  },
+  {
+    name: "Brazilia",
+    cities: ["Brasília", "Rio de Janeiro", "São Paulo"]
   }
 ];
 
